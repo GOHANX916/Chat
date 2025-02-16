@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up / Login</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex items-center justify-center h-screen bg-gray-100">
+    <div class="w-full max-w-md p-4 bg-white rounded-lg shadow-md">
+        <h2 class="text-xl font-bold text-center" id="form-title">Sign Up</h2>
+        <input id="username" type="text" class="w-full p-2 border border-gray-300 rounded mt-2" placeholder="Username">
+        <input id="email" type="email" class="w-full p-2 border border-gray-300 rounded mt-2" placeholder="Email">
+        <input id="password" type="password" class="w-full p-2 border border-gray-300 rounded mt-2" placeholder="Password">
+        <button id="submit-btn" onclick="submitForm()" class="w-full mt-2 p-2 bg-green-500 text-white rounded">Sign Up</button>
+        <p class="text-center mt-2"><a href="#" onclick="toggleForm()" class="text-blue-500" id="toggle-link">Already have an account? Login</a></p>
+    </div>
+    
+    <script>
+        let isLogin = false;
+        function toggleForm() {
+            isLogin = !isLogin;
+            document.getElementById('form-title').textContent = isLogin ? 'Login' : 'Sign Up';
+            document.getElementById('submit-btn').textContent = isLogin ? 'Login' : 'Sign Up';
+            document.getElementById('toggle-link').textContent = isLogin ? "Don't have an account? Sign Up" : "Already have an account? Login";
+        }
+
+        function submitForm() {
+            const username = document.getElementById('username').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const endpoint = isLogin ? 'login' : 'signup';
+
+            fetch(`http://localhost:3000/${endpoint}`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username, email, password })
+            }).then(res => res.json()).then(data => {
+                alert(data.message);
+                if (data.message === 'Login successful') {
+                    window.location.href = 'chat.html';
+                }
+            }).catch(error => console.error('Error:', error));
+        }
+    </script>
+</body>
+</html>
